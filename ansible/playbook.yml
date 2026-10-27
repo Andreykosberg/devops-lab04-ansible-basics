@@ -1,0 +1,26 @@
+---
+- name: Install and configure nginx web server
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Install nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+
+    - name: Ensure nginx is running and enabled
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+    - name: Copy index.html to web root
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html/index.nginx-debian.html
+        owner: www-data
+        group: www-data
+        mode: "0644"
